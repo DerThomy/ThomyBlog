@@ -14,7 +14,8 @@
                         </div>
                     @endif
 
-                    You are logged in as <strong>superadmin</strong>!
+                    @component('components.who')
+                    @endcomponent
                 </div>
             </div>
         </div>

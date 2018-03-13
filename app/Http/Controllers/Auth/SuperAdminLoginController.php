@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\ValidationException;
 use Auth;
 
 class SuperAdminLoginController extends Controller
 {
     public function __construct(){
-        $this->middleware('guest:superadmin');
+        $this->middleware('guest:superadmin')->except('logout');
     }
 
     public function showLoginForm(){
@@ -27,7 +28,7 @@ class SuperAdminLoginController extends Controller
         }
         
         // if unsuccessfull
-        return $this->sendFailedLoginResponse();
+        return $this->sendFailedLoginResponse($request);
     }
 
 
@@ -70,8 +71,6 @@ class SuperAdminLoginController extends Controller
     public function logout(Request $request)
     {
         $this->guard('superadmin')->logout();
-
-        $request->session()->invalidate();
 
         return redirect('/');
     }
