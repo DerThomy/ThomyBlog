@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -43,15 +43,37 @@
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                    
+                                    @auth('web')
+                                    <a class="dropdown-item" href="{{ route('users.logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('User Logout') }}
                                     </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
+                                    @endauth
+                                    @auth('admin')
+                                    <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('admin-logout-form').submit();">
+                                        {{ __('Admin Logout') }}
+                                    </a>
+                                    <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    @endauth
+                                    @auth('superadmin')
+                                    <a class="dropdown-item" href="{{ route('superadmin.logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('superadmin-logout-form').submit();">
+                                        {{ __('Superadmin Logout') }}
+                                    </a>
+                                    <form id="superadmin-logout-form" action="{{ route('superadmin.logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    @endauth
                                 </div>
                             </li>
                         @endguest
