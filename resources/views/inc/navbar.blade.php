@@ -28,13 +28,29 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
-                    @guest
+                    @if(Auth::guest() && !Auth::guard('admin')->check() && !Auth::guard('superadmin')->check())
                         <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
                         <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
                     @else
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                @auth('web')
+                                    {{ Auth::guard('web')->user()->name }} <span class="caret"></span>
+                                @endauth
+
+                                @auth('admin')
+                                    @auth('web')
+                                        |  
+                                    @endauth
+                                    {{ Auth::guard('admin')->user()->name }} <span class="caret"></span>
+                                @endauth
+
+                                @auth('superadmin')
+                                    @if(Auth::check() || Auth()::guard('admin')->check())
+                                    | 
+                                    @endif
+                                    {{ Auth::guard('superadmin')->user()->name }} <span class="caret"></span>
+                                @endauth
                             </a>
 
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -44,7 +60,7 @@
                                 <a class="dropdown-item" href="{{ route('users.logout') }}"
                                     onclick="event.preventDefault();
                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('User Logout') }}
+                                    {{ Auth::guard('web')->user()->name ." ". __('Logout') }}
                                 </a>
                                 <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
                                     @csrf
@@ -54,7 +70,7 @@
                                 <a class="dropdown-item" href="{{ route('admin.logout') }}"
                                     onclick="event.preventDefault();
                                                     document.getElementById('admin-logout-form').submit();">
-                                    {{ __('Admin Logout') }}
+                                    {{ Auth::guard('admin')->user()->name ." ". __('Logout') }}
                                 </a>
                                 <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                                     @csrf
@@ -64,13 +80,17 @@
                                 <a class="dropdown-item" href="{{ route('superadmin.logout') }}"
                                     onclick="event.preventDefault();
                                                     document.getElementById('superadmin-logout-form').submit();">
-                                    {{ __('Superadmin Logout') }}
+                                    {{ Auth::guard('superadmin')->user()->name ." ". __('Logout') }}
                                 </a>
                                 <form id="superadmin-logout-form" action="{{ route('superadmin.logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
                                 @endauth
                             </div>
+                            @if(!Auth::check() && (Auth::guard('admin')->check() || Auth::guard('superadmin')->check()))
+                            <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                            <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            @endif
                         </li>
                     @endguest
                 </ul>

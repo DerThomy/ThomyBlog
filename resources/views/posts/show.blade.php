@@ -10,8 +10,17 @@
     <hr>
     <small>Written on {{$post->created_at}} by {{$post->user->name}}</small>
     <hr>
-    @if(!Auth::guest())
-        @if(Auth::user()->id == $post->user_id)
+    @if(!Auth::guest() || Auth::guard('admin')->check() || Auth::guard('superadmin')->chek())
+        @if(isset(Auth::user()->id))
+            @if(Auth::user()->id == $post->user_id)
+                <a href="{{route('posts.index')}}/{{$post->id}}/edit" class="btn btn-info">Edit</a>
+
+                {!! Form::open(['action' => ['PostsController@destroy', $post->id], 'method' => 'POST', 'class' => 'float-right']) !!}
+                    {{Form::hidden('_method', 'DELETE')}}
+                    {{Form::submit('Delete', ['class' => 'btn btn-danger'])}}
+                {!! Form::close() !!}
+            @endif
+        @else
             <a href="{{route('posts.index')}}/{{$post->id}}/edit" class="btn btn-info">Edit</a>
 
             {!! Form::open(['action' => ['PostsController@destroy', $post->id], 'method' => 'POST', 'class' => 'float-right']) !!}
