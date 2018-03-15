@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Auth;
 
 class SuperAdminLoginController extends Controller
@@ -49,9 +48,10 @@ class SuperAdminLoginController extends Controller
     protected function sendLoginResponse(Request $request){
         $request->session()->regenerate();
 
+        $this->clearLoginAttempts($request);
 
         return $this->authenticated($request, $this->guard()->user())
-                ?: redirect()->intended($this->redirectPath());
+                ?: redirect()->intended($this->superadminRedirectPath());
     }
 
     protected function sendFailedLoginResponse(Request $request)
@@ -92,7 +92,7 @@ class SuperAdminLoginController extends Controller
         return 'email';
     }
 
-    public function redirectPath(){
+    public function superadminRedirectPath(){
         return route('superadmin.dashboard');
     }
 

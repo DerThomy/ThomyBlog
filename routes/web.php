@@ -11,13 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@index')->name('index');
+Route::get('/about', 'PagesController@about')->name('about');
+Route::get('/services', 'PagesController@services')->name('services');
+Route::get('/home', 'HomeController@index')->name('home');
+
+// Posts Routes
+
+Route::resource('posts', 'PostsController');
+
+// User Routes
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/users/logout', 'Auth\LoginController@userLogout')->name('users.logout');
 
 Route::prefix('admin')->group(function() {

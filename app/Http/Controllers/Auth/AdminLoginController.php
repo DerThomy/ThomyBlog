@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Auth;
 
 class AdminLoginController extends Controller
@@ -47,9 +46,10 @@ class AdminLoginController extends Controller
     protected function sendLoginResponse(Request $request){
         $request->session()->regenerate();
 
+        $this->clearLoginAttempts($request);
 
         return $this->authenticated($request, $this->guard()->user())
-                ?: redirect()->intended($this->redirectPath());
+                ?: redirect()->intended($this->adminRedirectPath());
     }
 
     protected function sendFailedLoginResponse(Request $request)
@@ -90,7 +90,7 @@ class AdminLoginController extends Controller
         return 'email';
     }
 
-    public function redirectPath(){
+    public function adminRedirectPath(){
         return route('admin.dashboard');
     }
 
