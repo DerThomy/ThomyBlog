@@ -13,9 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api,admin-api,superadmin-api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function () {
+    //CommentsAPI
+    Route::post('post/{post}/comment', 'CommentController@store');
 });
+
+// CommentsAPI Routes
+
+Route::get('post/{post}/comments', 'CommentController@index');
 
 // PostsAPI Routes
 
