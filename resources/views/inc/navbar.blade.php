@@ -42,14 +42,14 @@
                                     @auth('web')
                                         |  
                                     @endauth
-                                    {{ Auth::guard('admin')->user()->name }} <span class="caret"></span>
+                                    (A) {{ Auth::guard('admin')->user()->name }} <span class="caret"></span>
                                 @endauth
 
                                 @auth('superadmin')
-                                    @if(Auth::check() || Auth()::guard('admin')->check())
+                                    @if(Auth::check() || Auth::guard('admin')->check())
                                     | 
                                     @endif
-                                    {{ Auth::guard('superadmin')->user()->name }} <span class="caret"></span>
+                                    (SA) {{ Auth::guard('superadmin')->user()->name }} <span class="caret"></span>
                                 @endauth
                             </a>
 
@@ -70,7 +70,7 @@
                                 <a class="dropdown-item" href="{{ route('admin.logout') }}"
                                     onclick="event.preventDefault();
                                                     document.getElementById('admin-logout-form').submit();">
-                                    {{ Auth::guard('admin')->user()->name ." ". __('Logout') }}
+                                    (A) {{ Auth::guard('admin')->user()->name ." ". __('Logout') }}
                                 </a>
                                 <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                                     @csrf
@@ -80,7 +80,7 @@
                                 <a class="dropdown-item" href="{{ route('superadmin.logout') }}"
                                     onclick="event.preventDefault();
                                                     document.getElementById('superadmin-logout-form').submit();">
-                                    {{ Auth::guard('superadmin')->user()->name ." ". __('Logout') }}
+                                    (SA) {{ Auth::guard('superadmin')->user()->name ." ". __('Logout') }}
                                 </a>
                                 <form id="superadmin-logout-form" action="{{ route('superadmin.logout') }}" method="POST" style="display: none;">
                                     @csrf
