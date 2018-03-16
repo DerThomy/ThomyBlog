@@ -46,7 +46,7 @@
                                 @endauth
 
                                 @auth('superadmin')
-                                    @if(Auth::check() || Auth::guard('admin')->check())
+                                    @if(Auth::guard('web')->check() || Auth::guard('admin')->check())
                                     | 
                                     @endif
                                     (SA) {{ Auth::guard('superadmin')->user()->name }} <span class="caret"></span>
@@ -87,9 +87,9 @@
                                 </form>
                                 @endauth
                             </div>
-                            @if(!Auth::check() && (Auth::guard('admin')->check() || Auth::guard('superadmin')->check()))
-                            <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                            <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            @if(!Auth::guard('web')->check() && (Auth::guard('admin')->check() || Auth::guard('superadmin')->check()))
+                                <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
+                                <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
                             @endif
                         </li>
                     @endguest

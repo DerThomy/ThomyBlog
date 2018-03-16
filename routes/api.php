@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api,admin-api,superadmin-api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// PostsAPI Routes
+
+Route::get('posts', 'PostsApiController@index');
+Route::get('post/{id}', 'PostsApiController@show');
