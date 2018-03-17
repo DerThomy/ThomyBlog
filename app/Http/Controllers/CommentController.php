@@ -8,6 +8,7 @@ use App\Post;
 use Auth;
 use App\Comment;
 use App\Http\Resources\Comment as CommentResource;
+use App\Events\NewComment;
 
 class CommentController extends Controller
 {
@@ -30,6 +31,8 @@ class CommentController extends Controller
         ]);
 
         $comment = Comment::where('id', $comment->id)->with('user')->first();
+        
+        broadcast(new NewComment($comment))->toOthers();
 
         return new CommentResource($comment);
     }

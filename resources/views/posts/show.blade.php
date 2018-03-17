@@ -72,10 +72,11 @@
         },
         mounted() {
             this.getComments();
+            this.listen();
         },
         methods: {
             getComments() {
-                axios.get(`http://localhost/ThomyBlog/public/api/post/${this.post.id}/comments`)
+                axios.get(`{{route('index')}}/api/post/${this.post.id}/comments`)
                     .then((response) => {
                         this.comments = response.data.data
                     })
@@ -85,12 +86,11 @@
                     });
             },
             postComment() {
-                axios.post(`http://localhost/ThomyBlog/public/api/post/${this.post.id}/comment`, {
+                axios.post(`{{route('index')}}/api/post/${this.post.id}/comment`, {
                     api_token: this.user.api_token,
                     body: this.commentBox
                 })
                 .then((response) => {
-                    console.log(response.data.data);
                     this.comments.unshift(response.data.data);
                     this.commentBox = '';
                 })
@@ -98,6 +98,12 @@
                     alert('Failed to send Comment, try again or inform your admin');
                     console.log(error);
                 });
+            },
+            listen() {
+                Echo.channel('post.'+this.post.id)
+                    .listen('NewComment', (comment) => {
+                        this.comments.unshift(comment);
+                    })
             }
         }
     });
